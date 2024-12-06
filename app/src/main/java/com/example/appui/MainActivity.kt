@@ -2,6 +2,7 @@ package com.example.appui
 
 import android.bluetooth.BluetoothClass.Device
 import android.os.Bundle
+import android.provider.CalendarContract.Colors
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -99,7 +100,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.colorspace.WhitePoint
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -147,6 +150,7 @@ class MainActivity : ComponentActivity() {
                         )
                     }) { innerPadding ->
                     MainScreenUI(scrollState)
+                    MainUiPreview()
                 }
             }
         }
@@ -637,6 +641,114 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    @Composable
+    fun CurvedCard() {
+        Box(
+            modifier = Modifier
+
+                .background(Color.LightGray)
+                .padding(vertical = 100.dp)
+                .paint(painterResource(R.drawable.ic_box_border))
+                .scale(0.93f)
+        ) {
+            Canvas(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp)
+                    .height(60.dp)
+            ) {
+
+                val path = Path().apply {
+                    val curveHeight = 30f
+                    val cornerRadius = 12.dp.toPx() // Convert dp to pixels
+
+                    // Start at the top-left corner with a rounded corner
+                    moveTo(0f, cornerRadius) // Move to the top-left point
+                    arcTo(
+                        rect = Rect(0f, 0f, cornerRadius * 2, cornerRadius * 2),
+                        startAngleDegrees = 180f,
+                        sweepAngleDegrees = 90f,
+                        forceMoveTo = false
+                    )
+
+                    // Top curve
+                    quadraticBezierTo(
+                        size.width / 2, // Control point X
+                        -17f, // Control point Y (peak of curve)
+                        size.width - cornerRadius, // End point X
+                        0f // End point Y
+                    )
+
+                    // Top-right corner
+                    arcTo(
+                        rect = Rect(
+                            size.width - cornerRadius * 2,
+                            0f,
+                            size.width,
+                            cornerRadius * 2
+                        ),
+                        startAngleDegrees = 270f,
+                        sweepAngleDegrees = 90f,
+                        forceMoveTo = false
+                    )
+
+                    // Right side
+                    lineTo(size.width, size.height - curveHeight - cornerRadius)
+
+                    // Bottom-right corner
+                    arcTo(
+                        rect = Rect(
+                            size.width - cornerRadius * 2,
+                            size.height - curveHeight - cornerRadius * 2,
+                            size.width,
+                            size.height - curveHeight
+                        ),
+                        startAngleDegrees = 0f,
+                        sweepAngleDegrees = 90f,
+                        forceMoveTo = false
+                    )
+
+                    // Bottom curve
+                    quadraticBezierTo(
+                        size.width / 2, // Control point X
+                        140f, // Control point Y (dip of curve)
+                        cornerRadius, // End point X
+                        size.height - curveHeight // End point Y
+                    )
+
+                    // Bottom-left corner
+                    arcTo(
+                        rect = Rect(
+                            0f,
+                            size.height - curveHeight - cornerRadius * 2,
+                            cornerRadius * 2,
+                            size.height - curveHeight
+                        ),
+                        startAngleDegrees = 90f,
+                        sweepAngleDegrees = 90f,
+                        forceMoveTo = false
+                    )
+
+                    // Left side
+                    lineTo(0f, curveHeight + cornerRadius)
+
+                    close() // Close the path
+                }
+
+                // Draw the path with a border and fill color
+                drawPath(
+                    path = path,
+                    color = Color.White
+                )
+                drawPath(
+                    path = path,
+                    color = Color.Transparent, // Border color
+                    style = Stroke(width = 6f) // Border width
+                )
+            }
+        }
+
+    }
 
     @Composable
     fun CustomShape(modifier: Modifier) {
@@ -739,7 +851,6 @@ class MainActivity : ComponentActivity() {
 //                    style = Stroke(width = 2.dp.toPx())  // Border width
 //                )
 //            }
-
 
 
             Row(
@@ -996,5 +1107,73 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier
             )
         }
+    }
+
+    @Preview(showSystemUi = true, device = Devices.PIXEL_7, showBackground = false)
+    @Composable
+    fun MainUiPreview() {
+        /*  Box(
+              modifier = Modifier
+                  .fillMaxWidth()
+                  .padding(horizontal = 18.sdp)
+                  .background(
+                      color = Color.White
+                  )
+                  .paint(
+                      painter = painterResource(id = R.drawable.ic_box_border)
+                  )
+          ) {
+              Row(
+                  verticalAlignment = Alignment.CenterVertically,
+                  modifier = Modifier.fillMaxHeight()
+              ) {
+                  val text by remember { mutableStateOf("") }
+                  OutlinedTextField(
+                      value = text,
+                      onValueChange = {},
+                      placeholder = {
+                          Text(
+                              text = "Pay to Contact",
+                              color = Color.Gray
+                          )
+                      },
+                      leadingIcon = {
+                          Image(
+                              painter = painterResource(R.drawable.ic_search), // Replace with your drawable resource
+                              contentDescription = "Search Icon"
+                          )
+                      },
+                      modifier = Modifier
+                          .fillMaxSize()
+                          .weight(2.5f),
+                      colors = OutlinedTextFieldDefaults.colors(
+                          focusedContainerColor = Color.Transparent,
+                          unfocusedContainerColor = Color.Transparent,
+                          disabledContainerColor = Color.Transparent,
+                          errorContainerColor = Color.Transparent,
+                          cursorColor = Color.Black,
+                          selectionColors = LocalTextSelectionColors.current,
+                          focusedBorderColor = Color.Transparent, // Set transparent since we're using a custom border
+                          unfocusedBorderColor = Color.Transparent
+                      ),
+                      shape = RoundedCornerShape(8.dp) // Rounded corners
+                  )
+                  Image(
+                      painter = painterResource(R.drawable.ic_scan_to_pay),
+                      "Scan to Pay",
+                      modifier = Modifier
+                          .weight(1f)
+                          .padding(end = 8.sdp),
+                  )
+              }
+          }*/
+//        Box(modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(top = 100.dp)
+//            .background(Color.LightGray)
+//            .paint(painterResource(R.drawable.ic_box_border))
+//            .scale(0.92f)) {
+        CurvedCard()
+//        }
     }
 }
