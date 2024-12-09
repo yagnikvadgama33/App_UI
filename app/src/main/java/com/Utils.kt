@@ -3,6 +3,7 @@ package com
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
@@ -15,6 +16,34 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.appui.R
+import com.example.appui.ui.theme.brightOrange
+import com.example.appui.ui.theme.liteGreen
+
+
+ fun setTranscationType(amount: Int, transactionType: TransactionType): String {
+    return if (transactionType == TransactionType.CREDIT) {
+        "+ €$amount"
+    } else {
+        "- €$amount"
+    }
+}
+
+ fun setAmountColor(transactionType: TransactionType): Color {
+    return if (transactionType == TransactionType.DEBIT) {
+        brightOrange
+    } else {
+        liteGreen
+    }
+}
+
+ fun setTransactionMessage(transactionType: TransactionType): String {
+    return if (transactionType == TransactionType.DEBIT) {
+        "Sent Securely"
+    } else {
+        "Received Successfully"
+    }
+}
+
 
 val Int.sdp: Dp
     @Composable

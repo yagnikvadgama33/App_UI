@@ -1,15 +1,14 @@
 package com.example.appui
 
-import android.bluetooth.BluetoothClass.Device
 import android.os.Bundle
-import android.provider.CalendarContract.Colors
+import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,7 +23,6 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -34,16 +32,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -54,30 +48,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.scale
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.TransactionType
 import com.example.CircularImageView
 import com.example.CvIconButton
 import com.example.CvImageView
 import com.example.CvTextView
 import com.example.XifiPayView
-import com.example.appui.ui.model.Transaction
+import com.example.appui.model.Transaction
 import com.example.appui.ui.theme.AppUITheme
 import com.example.appui.ui.theme.brightOrange
 import com.example.appui.ui.theme.dividerColor
 import com.example.appui.ui.theme.liteGreen
-import com.example.appui.ui.theme.inviteFrndBg
 import com.example.appui.ui.theme.liteTxtColor
 import com.example.appui.ui.theme.starBgColor
 import com.example.appui.ui.theme.subTxtColor
@@ -90,26 +82,12 @@ import com.productSansMedium
 import com.productSansRegular
 import com.robotoRegular
 import com.sdp
+import com.setAmountColor
+import com.setTransactionMessage
+import com.setTranscationType
 import com.sfProDisplayBold
 import com.sfProDisplayRegular
 import com.ssp
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.colorspace.WhitePoint
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.cardex.ui.util.common.components.squircle.CornerSmoothing
-import com.cardex.ui.util.common.components.squircle.SquircleShape
 
 class MainActivity : ComponentActivity() {
 
@@ -148,9 +126,24 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                         )
-                    }) { innerPadding ->
+                    },
+                    floatingActionButton = {
+                        IconButton(
+                            content = {
+                                Image(
+                                    painter = painterResource(R.drawable.ic_scan_qr),
+                                    stringResource(R.string.cd_scan_qr)
+                                )
+                            },
+                            onClick = {
+                            },
+                            modifier = Modifier
+                                .scale(1.8f)
+                                .padding(bottom = 12.sdp, end = 12.sdp)
+                        )
+                    }
+                ) { innerPadding ->
                     MainScreenUI(scrollState)
-                    MainUiPreview()
                 }
             }
         }
@@ -162,7 +155,6 @@ class MainActivity : ComponentActivity() {
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(state = scrollState)
-                .background(Color.White)
         ) {
             Column(modifier = Modifier.fillMaxHeight(0.5f)) {
                 Box(
@@ -203,36 +195,36 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
 
-                            Spacer(modifier = Modifier.width(16.dp))
+                            Spacer(modifier = Modifier.width(16.sdp))
 
                             Column(
                                 modifier = Modifier.fillMaxHeight(),
-                                verticalArrangement = Arrangement.spacedBy(3.dp),
+                                verticalArrangement = Arrangement.spacedBy(3.sdp),
                                 horizontalAlignment = Alignment.Start
                             ) {
-                                Text(
-                                    text = "Name Surname",
+                                CvTextView(
+                                    txt = stringResource(R.string.txt_name_surname),
                                     fontSize = 19.ssp,
-                                    color = txtNameColor,
+                                    textColor = txtNameColor,
                                     style = sfProDisplayBold,
                                     modifier = Modifier
                                 )
                                 Row {
-                                    Text(
-                                        text = "VPA ID:  ",
+                                    CvTextView(
+                                        txt = stringResource(R.string.txt_vpa_id),
                                         style = robotoRegular,
                                         fontSize = 13.ssp,
-                                        color = txtNameColor
+                                        textColor = txtNameColor
                                     )
-                                    Text(
-                                        text = "cryptouser@ixfi",
+                                    CvTextView(
+                                        txt = stringResource(R.string.txt_cryptouser_ixfi),
                                         style = robotoRegular,
                                         fontSize = 13.ssp,
-                                        color = vpaIdColor
+                                        textColor = vpaIdColor
                                     )
                                     Image(
                                         painter = painterResource(R.drawable.ic_copy),
-                                        contentDescription = "Copy",
+                                        contentDescription = stringResource(R.string.cd_copy),
                                         Modifier
                                             .padding(start = 8.sdp)
                                             .size(14.sdp)
@@ -241,39 +233,40 @@ class MainActivity : ComponentActivity() {
                             }
                         }
 
-                        Spacer(Modifier.padding(top = 36.dp))
+                        Spacer(Modifier.padding(top = 36.sdp))
 
-//                        CurvedLineUI()
-
+                        //Pay to Contact
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 18.sdp)
-                                .background(
-                                    color = Color.White
-                                )
-                                .paint(
-                                    painter = painterResource(id = R.drawable.ic_box_border)
-                                )
                         ) {
+
+                            CurvedCard()
+
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.fillMaxHeight()
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .padding(top = 4.sdp)
                             ) {
                                 val text by remember { mutableStateOf("") }
+                                var textFieldValue by remember { mutableStateOf("") } // State to hold text input
+
                                 OutlinedTextField(
-                                    value = text,
-                                    onValueChange = {},
+                                    value = textFieldValue,
+                                    onValueChange = { newText -> textFieldValue = newText }, // Update state on text input
                                     placeholder = {
-                                        Text(
-                                            text = "Pay to Contact",
-                                            color = Color.Gray
+                                        CvTextView(
+                                            txt = stringResource(R.string.txt_pay_to_contact),
+                                            textColor = Color.Gray,
+                                            fontSize = 14.ssp
                                         )
                                     },
                                     leadingIcon = {
                                         Image(
                                             painter = painterResource(R.drawable.ic_search), // Replace with your drawable resource
-                                            contentDescription = "Search Icon"
+                                            contentDescription = stringResource(R.string.cd_search_icon)
                                         )
                                     },
                                     modifier = Modifier
@@ -289,30 +282,33 @@ class MainActivity : ComponentActivity() {
                                         focusedBorderColor = Color.Transparent, // Set transparent since we're using a custom border
                                         unfocusedBorderColor = Color.Transparent
                                     ),
-                                    shape = RoundedCornerShape(8.dp) // Rounded corners
+                                    shape = RoundedCornerShape(8.sdp) // Rounded corners
                                 )
+
                                 Image(
                                     painter = painterResource(R.drawable.ic_scan_to_pay),
-                                    "Scan to Pay",
+                                    stringResource(R.string.cd_scan_to_pay),
                                     modifier = Modifier
                                         .weight(1f)
-                                        .padding(end = 8.sdp),
+                                        .padding(end = 10.sdp)
+                                    .scale(1.1f),
                                 )
                             }
                         }
 
+                        //Unlock Payment
                         Box(modifier = Modifier.fillMaxSize()) {
                             // Background Image
                             Image(
                                 painter = painterResource(id = R.drawable.banner_unlock), // Replace with your image resource
-                                contentDescription = "Background Image",
+                                contentDescription = stringResource(R.string.cd_background_image),
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .padding(
                                         top = 14.sdp,
                                         start = 18.sdp,
                                         end = 18.sdp,
-                                        bottom = 18.sdp
+                                        bottom = 14.sdp
                                     ),
                             )
 
@@ -326,53 +322,53 @@ class MainActivity : ComponentActivity() {
                             ) {
                                 // Main Title
                                 CvTextView(
-                                    txt = "Unlock",
-                                    fontSize = 28.ssp,
+                                    txt = stringResource(R.string.txt_unlock),
+                                    fontSize = 30.ssp,
                                     style = sfProDisplayBold,
                                     textColor = Color.White,
                                 )
 
-                                Spacer(modifier = Modifier.height(4.dp))
+                                Spacer(modifier = Modifier.height(4.sdp))
 
                                 // Subtext with icons
                                 Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Text(
-                                        text = "Send",
+                                    CvTextView(
+                                        txt = stringResource(R.string.txt_send),
                                         fontSize = 14.ssp,
                                         fontWeight = FontWeight.Bold,
-                                        color = txtOrange
+                                        textColor = txtOrange
                                     )
-                                    Spacer(modifier = Modifier.width(4.dp))
+                                    Spacer(modifier = Modifier.width(4.sdp))
                                     Image(
                                         painter = painterResource(id = R.drawable.ic_arrow_send), // Replace with your send icon resource
-                                        contentDescription = "Send Icon",
-                                        modifier = Modifier.size(14.dp)
+                                        contentDescription = stringResource(R.string.cd_send),
+                                        modifier = Modifier.size(14.sdp)
                                     )
-                                    Text(
-                                        text = ",",
-                                        fontSize = 14.sp,
+                                    CvTextView(
+                                        txt = stringResource(R.string.comma),
+                                        fontSize = 14.ssp,
                                         fontWeight = FontWeight.Bold,
-                                        color = Color.White,
+                                        textColor = Color.White,
                                         modifier = Modifier.padding(horizontal = 2.sdp)
                                     )
 
-                                    Text(
-                                        text = "Receive",
+                                    CvTextView(
+                                        txt = stringResource(R.string.txt_receive),
                                         fontSize = 14.ssp,
                                         fontWeight = FontWeight.Bold,
-                                        color = txtGreen
+                                        textColor = txtGreen
                                     )
-                                    Spacer(modifier = Modifier.width(2.dp))
+                                    Spacer(modifier = Modifier.width(2.sdp))
                                     Image(
                                         painter = painterResource(id = R.drawable.ic_arrow_receive), // Replace with your receive icon resource
-                                        contentDescription = "Receive Icon",
-                                        modifier = Modifier.size(14.dp)
+                                        contentDescription = stringResource(R.string.cd_receive),
+                                        modifier = Modifier.size(14.sdp)
                                     )
                                 }
 
                                 // Footer Text
                                 CvTextView(
-                                    txt = "Payments",
+                                    txt = stringResource(R.string.txt_payments),
                                     fontSize = 26.ssp,
                                     style = sfProDisplayBold,
                                     fontWeight = FontWeight.SemiBold,
@@ -399,11 +395,11 @@ class MainActivity : ComponentActivity() {
                         .align(Alignment.Bottom)
                         .padding(start = 3.sdp, bottom = 2.sdp)
                 ) {
-                    Text(
-                        "to",
+                    CvTextView(
+                        txt = "to",
                         style = sfProDisplayRegular,
                         fontSize = 22.ssp,
-                        color = txtNameColor
+                        textColor = txtNameColor
                     )
                 }
                 Image(
@@ -417,18 +413,18 @@ class MainActivity : ComponentActivity() {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 18.sdp, start = 16.sdp, end = 16.sdp),
+                    .padding(top = 12.sdp, start = 16.sdp, end = 16.sdp),
                 horizontalArrangement = Arrangement.SpaceEvenly
             )
             {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     CvImageView(
                         resId = R.drawable.ic_contact,
-                        "Contact",
+                        stringResource(R.string.vd_contact),
                         modifier = Modifier.size(80.sdp)
                     )
                     CvTextView(
-                        "Contacts",
+                        stringResource(R.string.txt_contacts),
                         modifier = Modifier.padding(top = 3.sdp),
                         fontSize = 13.ssp,
                         fontWeight = FontWeight.Bold
@@ -438,11 +434,11 @@ class MainActivity : ComponentActivity() {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     CvImageView(
                         resId = R.drawable.ic_vpa,
-                        "Vpa",
+                        stringResource(R.string.cd_vpa),
                         modifier = Modifier.size(80.sdp)
                     )
                     CvTextView(
-                        "VPA",
+                        stringResource(R.string.txt_vpa),
                         modifier = Modifier.padding(top = 3.sdp),
                         fontSize = 13.ssp,
                         fontWeight = FontWeight.Bold
@@ -452,11 +448,11 @@ class MainActivity : ComponentActivity() {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     CvImageView(
                         resId = R.drawable.ic_receive,
-                        "Receive",
+                        stringResource(R.string.cd_receive),
                         modifier = Modifier.size(80.sdp)
                     )
                     CvTextView(
-                        "Receive",
+                        stringResource(R.string.txt_receive),
                         modifier = Modifier.padding(top = 3.sdp),
                         fontSize = 13.ssp,
                         fontWeight = FontWeight.Bold
@@ -483,9 +479,9 @@ class MainActivity : ComponentActivity() {
                 Row {
                     Image(
                         painter = painterResource(R.drawable.ic_percent_star_bg),
-                        "star bg",
+                        stringResource(R.string.bg_img),
                         modifier = Modifier
-                            .offset(x = (-10).dp, y = (-2).sdp)
+                            .offset(x = (-10).sdp, y = (-2).sdp)
                             .scale(1.1f)
                     )
                     // Content above the image
@@ -494,16 +490,25 @@ class MainActivity : ComponentActivity() {
                             .padding(top = 16.sdp, bottom = 16.sdp, end = 18.sdp)
                     ) {
                         // Text Content
+                        Row(verticalAlignment = Alignment.Bottom) {
+                            CvTextView(
+                                txt = stringResource(R.string.wave_hand),
+                                fontSize = 21.ssp,
+                                fontWeight = FontWeight.Bold,
+                                style = sfProDisplayBold
+                            )
+                            CvTextView(
+                                txt = stringResource(R.string.txt_usdc_free_transfer),
+                                fontSize = 18.ssp,
+                                fontWeight = FontWeight.Bold,
+                                style = sfProDisplayBold
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(8.sdp))
                         CvTextView(
-                            txt = "\uD83D\uDC4B USDC Free Transfer",
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            style = sfProDisplayBold
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        CvTextView(
-                            txt = "Now you can transfer FREE Payments in USDC for unlimited times.",
-                            fontSize = 14.ssp,
+                            txt = stringResource(R.string.txt_transfer_desc),
+                            fontSize = 15.ssp,
                             style = robotoRegular,
                             textColor = subTxtColor,
                             modifier = Modifier.padding(start = 10.sdp)
@@ -515,40 +520,39 @@ class MainActivity : ComponentActivity() {
             Spacer(Modifier.height(34.sdp))
 
             //Your Contacts
-            ProfileTitleWithXifiPay("Your Contact on")
+            ProfileTitleWithXifiPay(stringResource(R.string.txt_your_contact_on))
 
             Spacer(modifier = Modifier.size(3.sdp))
 
             //Profile for Xifi Pay
             XifiPayHorizontalProfileList(
                 listOf(
-                    Pair(R.drawable.ic_user_1, "Leesa Monork"),
-                    Pair(R.drawable.ic_user_2, "Smith Smith"),
-                    Pair(R.drawable.ic_user_3, "Miller Davis"),
-                    Pair(R.drawable.ic_user_4, "Manica Jho")
+                    Pair(R.drawable.ic_user_1, stringResource(R.string.leesa_monork)),
+                    Pair(R.drawable.ic_user_2, stringResource(R.string.smith_smith)),
+                    Pair(R.drawable.ic_user_3, stringResource(R.string.miller_davis)),
+                    Pair(R.drawable.ic_user_4, stringResource(R.string.manica_jho))
                 )
             )
 
             //Invite your Friend
             Row(
                 modifier = Modifier
-                    .height(IntrinsicSize.Max)
                     .fillMaxWidth()
                     .padding(22.sdp)
-                    .background(inviteFrndBg, shape = RoundedCornerShape(14.sdp)),
+                    .paint(painter = painterResource(R.drawable.ic_invite_frnd_bg)),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(
                     modifier = Modifier
-                        .weight(1f)
-                        .padding(horizontal = 28.sdp)
+                        .weight(1.7f)
+                        .padding(horizontal = 22.sdp)
                 ) {
                     CvTextView(
                         txt = "Invite Your friends",
                         style = sfProDisplayBold,
                         fontSize = 19.ssp
                     )
-                    Spacer(modifier = Modifier.height(4.dp))
+                    Spacer(modifier = Modifier.height(4.sdp))
                     CvTextView(
                         txt = "Invite your friends to Earn IXFI points ",
                         style = robotoRegular,
@@ -558,36 +562,40 @@ class MainActivity : ComponentActivity() {
                 }
                 Image(
                     painter = painterResource(R.drawable.ic_invite_frnd),
-                    "Invite your friend",
-                    modifier = Modifier.size(150.sdp),
+                    stringResource(R.string.cd_invite_your_friend),
+                    modifier = Modifier
+                        .weight(1f)
+                        .scale(1.1f)
+                        .padding(bottom = 10.sdp),
                     contentScale = ContentScale.Fit
                 )
             }
 
-            Spacer(modifier = Modifier.size(8.sdp))
-
-            ProfileTitleWithXifiPay("Buy more with")
+            ProfileTitleWithXifiPay(stringResource(R.string.txt_buy_more_with))
             Spacer(modifier = Modifier.size(3.sdp))
 
             //Profile for Xifi Pay
             XifiPayHorizontalProfileList(
                 listOf(
-                    Pair(R.drawable.ic_brand_1, "Puma"),
-                    Pair(R.drawable.ic_brand_2, "Starbucks"),
-                    Pair(R.drawable.ic_brand_3, "Ferrari"),
-                    Pair(R.drawable.ic_brand_4, "Dominoz")
+                    Pair(R.drawable.ic_brand_1, stringResource(R.string.puma)),
+                    Pair(R.drawable.ic_brand_2, stringResource(R.string.starbucks)),
+                    Pair(R.drawable.ic_brand_3, stringResource(R.string.ferrari)),
+                    Pair(R.drawable.ic_brand_4, stringResource(R.string.dominoz))
                 )
             )
 
             Spacer(modifier = Modifier.size(12.sdp))
 
             //Recent Transactions
-            ProfileTitleWithXifiPay("Recent Transactions", showXifiPay = false)
+            ProfileTitleWithXifiPay(
+                title = stringResource(R.string.txt_recent_transactions),
+                showXifiPay = false
+            )
             TransactionListUI()
 
             Image(
                 painter = painterResource(R.drawable.ic_design_with_love_care),
-                "Bottom Hader",
+                stringResource(R.string.cd_bottom_hader),
                 alignment = Alignment.Center,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -601,30 +609,30 @@ class MainActivity : ComponentActivity() {
     fun TransactionListUI() {
         val transactions = listOf(
             Transaction(
-                "Martine D",
-                500,
-                "28/05/23 10:11:12",
-                TransactionType.DEBIT,
-                null
+                name = stringResource(R.string.martine_d),
+                amount = 500,
+                date = stringResource(R.string.martine_d_28_05_23_10_11_12),
+                transactionType = TransactionType.DEBIT,
+                profilePic = null
             ),
             Transaction(
-                "Leesa M",
-                2800,
-                "30/05/23 10:11:12",
-                TransactionType.CREDIT,
-                R.drawable.ic_user_1
+                name = stringResource(R.string.leesa_m),
+                amount = 2800,
+                date = stringResource(R.string.leesa_m_30_05_23_10_11_12),
+                transactionType = TransactionType.CREDIT,
+                profilePic = R.drawable.ic_user_1
             ),
             Transaction(
-                "Kareem K",
-                500,
-                "28/05/23 10:11:12",
-                TransactionType.DEBIT,
-                R.drawable.ic_user_kareem
+                name = stringResource(R.string.kareem_k),
+                amount = 500,
+                date = stringResource(R.string.kareem_k_28_05_23_10_11_12),
+                transactionType = TransactionType.DEBIT,
+                profilePic = R.drawable.ic_user_kareem
             ),
             Transaction(
-                "Manica J",
+                stringResource(R.string.manica_j),
                 500,
-                "28/05/23 10:11:12",
+                stringResource(R.string.manica_j_28_05_23_10_11_12),
                 TransactionType.CREDIT,
                 R.drawable.ic_user_manica
             )
@@ -633,11 +641,207 @@ class MainActivity : ComponentActivity() {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.sdp) // Light background
+                .padding(vertical = 8.sdp)
         ) {
-            transactions.forEach { transaction ->
-                TransactionItem(transaction)
+            transactions.forEachIndexed { i, transaction ->
+                TransactionItem(transaction, showDivider = transactions.size - 1 != i)
             }
+        }
+    }
+
+    @Composable
+    fun TransactionItem(transaction: Transaction, showDivider: Boolean) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.sdp)
+        ) {
+            // Profile Icon
+            Box(
+                modifier = Modifier
+                    .size(48.sdp)
+                    .clip(RoundedCornerShape(12.sdp))
+                    .background(color = brightOrange),
+                contentAlignment = Alignment.Center
+            ) {
+                if (transaction.profilePic == null) {
+                    CvTextView(
+                        txt = transaction.name[0].toString(),
+                        textColor = Color.White,
+                        style = productSansMedium,
+                        fontSize = 24.ssp
+                    )
+                } else {
+                    Image(
+                        painter = painterResource(id = transaction.profilePic),
+                        contentDescription = null,
+                        modifier = Modifier.scale(1.2f),
+                        contentScale = ContentScale.FillBounds
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.width(16.sdp))
+
+            // Details Section
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                // Name
+                CvTextView(
+                    txt = transaction.name,
+                    style = productSansMedium,
+                    fontSize = 15.ssp
+                )
+
+                Spacer(modifier = Modifier.height(4.sdp))
+
+                // Sent Securely Row
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(top = 4.sdp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(8.sdp)
+                            .clip(CircleShape)
+                            .background(liteGreen) // Green dot
+                    )
+                    Spacer(modifier = Modifier.width(8.sdp))
+                    CvTextView(
+                        txt = setTransactionMessage(transaction.transactionType),
+                        textColor = subTxtColor,
+                        style = robotoRegular,
+                        fontSize = 14.ssp
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.width(16.sdp))
+
+            // Amount & Date
+            Column(
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.padding(top = 4.sdp)
+            ) {
+                // Amount
+                CvTextView(
+                    txt = setTranscationType(transaction.amount, transaction.transactionType),
+                    textColor = setAmountColor(transaction.transactionType), // Orange color
+                    style = productSansRegular,
+                    fontSize = 14.ssp
+                )
+
+                Spacer(modifier = Modifier.height(4.sdp))
+
+                // Date
+                CvTextView(
+                    txt = transaction.date,
+                    textColor = subTxtColor,
+                    style = productSansRegular,
+                    fontSize = 14.ssp
+                )
+            }
+        }
+
+        // Divider
+        Log.d("DivierLine", "$showDivider")
+        if (showDivider) {
+            HorizontalDivider(
+                modifier = Modifier.padding(horizontal = 16.sdp),
+                thickness = 1.sdp,
+                color = dividerColor
+            )
+        }
+    }
+
+    @Composable
+    fun XifiPayHorizontalProfileList(list: List<Pair<Int, String>>) {
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.sdp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            list.forEach { profile ->
+                ProfileCard(profileImage = profile.first, username = profile.second)
+            }
+        }
+    }
+
+    @Composable
+    fun ProfileTitleWithXifiPay(title: String, showXifiPay: Boolean = true) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 12.sdp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Bottom
+        ) {
+            Row {
+                CvTextView(
+                    txt = title,
+                    style = sfProDisplayBold,
+                    fontSize = 19.ssp
+                )
+                XifiPayView(
+                    modifier = Modifier
+                        .height(24.sdp)
+                        .padding(horizontal = 6.sdp),
+                    isVisible = showXifiPay
+                )
+            }
+
+            Row(
+                modifier = Modifier.padding(end = 14.sdp),
+                verticalAlignment = Alignment.Bottom
+            ) {
+                CvTextView(
+                    txt = stringResource(R.string.cd_view_all),
+                    textColor = txtViewAll,
+                    fontSize = 12.ssp,
+                    style = productSansRegular,
+                    modifier = Modifier
+                )
+                Icon(
+                    painter = painterResource(R.drawable.ic_view_all),
+                    stringResource(R.string.cd_view_all), modifier = Modifier
+                        .scale(1.2f)
+                        .padding(top = 2.sdp, start = 8.sdp)
+                )
+            }
+        }
+    }
+
+    @Composable
+    fun ProfileCard(profileImage: Int, username: String) {
+        Column(
+            modifier = Modifier
+                .width(80.sdp)
+                .padding(horizontal = 2.sdp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                painter = painterResource(id = profileImage),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(65.sdp)
+                    .clip(RoundedCornerShape(16.sdp))
+                    .background(Color.Gray),
+                contentScale = ContentScale.FillBounds
+            )
+            Spacer(modifier = Modifier.height(4.sdp))
+            CvTextView(
+                txt = username,
+                style = robotoRegular,
+                textAlign = TextAlign.Center,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                fontSize = 11.ssp,
+                textColor = txtNameColor
+            )
         }
     }
 
@@ -645,17 +849,17 @@ class MainActivity : ComponentActivity() {
     fun CurvedCard() {
         Box(
             modifier = Modifier
-
-                .background(Color.LightGray)
-                .padding(vertical = 100.dp)
-                .paint(painterResource(R.drawable.ic_box_border))
-                .scale(0.93f)
+                .fillMaxWidth()
+                .paint(
+                    painter = painterResource(id = R.drawable.ic_box_border)
+                )
         ) {
+
             Canvas(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 12.dp)
-                    .height(60.dp)
+                    .padding(top = 10.sdp, start = 1.sdp, end = 1.sdp)
+                    .height(55.sdp)
             ) {
 
                 val path = Path().apply {
@@ -663,7 +867,7 @@ class MainActivity : ComponentActivity() {
                     val cornerRadius = 12.dp.toPx() // Convert dp to pixels
 
                     // Start at the top-left corner with a rounded corner
-                    moveTo(0f, cornerRadius) // Move to the top-left point
+                    moveTo(0f, cornerRadius)
                     arcTo(
                         rect = Rect(0f, 0f, cornerRadius * 2, cornerRadius * 2),
                         startAngleDegrees = 180f,
@@ -674,7 +878,7 @@ class MainActivity : ComponentActivity() {
                     // Top curve
                     quadraticBezierTo(
                         size.width / 2, // Control point X
-                        -17f, // Control point Y (peak of curve)
+                        -10f, // Control point Y (peak of curve)
                         size.width - cornerRadius, // End point X
                         0f // End point Y
                     )
@@ -711,7 +915,7 @@ class MainActivity : ComponentActivity() {
                     // Bottom curve
                     quadraticBezierTo(
                         size.width / 2, // Control point X
-                        140f, // Control point Y (dip of curve)
+                        135f, // Control point Y (dip of curve)
                         cornerRadius, // End point X
                         size.height - curveHeight // End point Y
                     )
@@ -739,6 +943,7 @@ class MainActivity : ComponentActivity() {
                 drawPath(
                     path = path,
                     color = Color.White
+//                    color = liteGreen
                 )
                 drawPath(
                     path = path,
@@ -747,433 +952,5 @@ class MainActivity : ComponentActivity() {
                 )
             }
         }
-
-    }
-
-    @Composable
-    fun CustomShape(modifier: Modifier) {
-        Canvas(modifier = modifier) {
-            val width = size.width
-            val height = size.height
-            val cornerRadius = 30f
-            val curveHeight = 20f
-
-            val path = Path().apply {
-                // Start at the top-left corner
-                moveTo(cornerRadius, 0f)
-                lineTo(width - cornerRadius, 0f)
-                cubicTo(
-                    width, 0f, // Control point 1
-                    width, height / 2 - curveHeight, // Control point 2
-                    width - cornerRadius, height / 2 // End of the curve
-                )
-                lineTo(width - cornerRadius, height - cornerRadius)
-                cubicTo(
-                    width, height, // Control point 1 for bottom curve
-                    width / 2, height, // Control point 2
-                    cornerRadius, height - cornerRadius // End point for bottom-left curve
-                )
-                lineTo(0f, cornerRadius)
-                close() // Close the shape
-            }
-
-            // Draw the shape with a fill color
-            drawPath(
-                path = path,
-                color = Color.White // Shape fill color
-            )
-
-            // Optional: Draw a border for the shape
-            drawPath(
-                path = path,
-                color = Color.LightGray, // Border color
-                style = Stroke(width = 2f) // Border thickness
-            )
-        }
-    }
-
-    @Composable
-    fun CurvedLineUI() {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 18.sdp)
-                .height(56.dp)  // Reduced height further
-                .background(
-                    Color.White,
-                    shape = SquircleShape(28.sdp, cornerSmoothing = CornerSmoothing.High)
-                )  // Ensure rounded corners
-        ) {
-            // Canvas for the curved border
-//            Canvas(
-//                modifier = Modifier.fillMaxSize()
-//            ) {
-//                val cornerRadius = 14.dp.toPx()  // Convert Dp to Px for rounded corners
-//                val curveHeight = size.height * 0.1f // Controls the curve height, you can adjust this value for a subtle curve
-//
-//                val path = Path().apply {
-//                    // Start at the top-left corner
-//                    moveTo(cornerRadius, 0f)
-//
-//                    // Subtle curve on top line
-//                    quadraticBezierTo(
-//                        size.width * 0.5f, -curveHeight,  // Slight curve control point above the box
-//                        size.width - cornerRadius, 0f     // End at the top-right corner
-//                    )
-//
-//                    // Right side curve
-//                    lineTo(size.width, size.height - cornerRadius)
-//                    quadraticBezierTo(
-//                        size.width, size.height,
-//                        size.width - cornerRadius, size.height
-//                    )
-//
-//                    // Bottom-right curve
-//                    lineTo(cornerRadius, size.height)
-//                    quadraticBezierTo(
-//                        0f, size.height,
-//                        0f, size.height - cornerRadius
-//                    )
-//
-//                    // Left side curve
-//                    lineTo(0f, cornerRadius)
-//                    quadraticBezierTo(
-//                        0f, 0f,
-//                        cornerRadius, 0f
-//                    )
-//
-//                    close() // Complete the path
-//                }
-//
-//                drawPath(
-//                    path = path,
-//                    color = Color(0xFFD1C4E9),  // Light border color
-//                    style = Stroke(width = 2.dp.toPx())  // Border width
-//                )
-//            }
-
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                // Left Section: Search Icon and Text
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(end = 8.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(android.R.drawable.ic_menu_search), // Replace with your search icon
-                        contentDescription = "Search Icon",
-                        tint = Color.Gray,
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "Pay to Contact",
-                        fontSize = 16.sp,
-                        color = Color.Gray
-                    )
-                }
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.ic_scan_to_pay), // Replace with your scan icon
-                        contentDescription = "Scan Icon",
-                    )
-                }
-            }
-        }
-    }
-
-
-    @Composable
-    fun TransactionItem(transaction: Transaction) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            // Profile Icon
-            Box(
-                modifier = Modifier
-                    .size(48.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(color = brightOrange), // Dynamic color
-                contentAlignment = Alignment.Center
-            ) {
-                if (transaction.profilePic == null) {
-                    Text(
-                        text = transaction.name[0].toString(),
-                        color = Color.White,
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.Bold
-                    )
-                } else {
-                    Image(
-                        painter = painterResource(id = transaction.profilePic),
-                        contentDescription = null,
-                        modifier = Modifier.scale(1.2f),
-                        contentScale = ContentScale.FillBounds
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            // Details Section
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-                // Name
-                CvTextView(
-                    txt = transaction.name,
-                    style = productSansMedium,
-                    fontSize = 15.ssp
-                )
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                // Sent Securely Row
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(top = 4.sdp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(8.dp)
-                            .clip(CircleShape)
-                            .background(liteGreen) // Green dot
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    CvTextView(
-                        txt = setTransactionMessage(transaction.transactionType),
-                        textColor = subTxtColor,
-                        style = robotoRegular,
-                        fontSize = 14.ssp
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            // Amount & Date
-            Column(
-                horizontalAlignment = Alignment.End,
-                verticalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.padding(top = 4.sdp)
-            ) {
-                // Amount
-                CvTextView(
-                    txt = setTranscationType(transaction.amount, transaction.transactionType),
-                    textColor = setAmountColor(transaction.transactionType), // Orange color
-                    style = productSansRegular,
-                    fontSize = 14.ssp
-                )
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                // Date
-                CvTextView(
-                    txt = transaction.date,
-                    textColor = subTxtColor,
-                    style = productSansRegular,
-                    fontSize = 14.ssp
-                )
-            }
-        }
-
-        // Divider
-        HorizontalDivider(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            thickness = 1.dp,
-            color = dividerColor
-        )
-    }
-
-    private fun setTranscationType(amount: Int, transactionType: TransactionType): String {
-        return if (transactionType == TransactionType.CREDIT) {
-            "+ €$amount"
-        } else {
-            "- €$amount"
-        }
-    }
-
-    private fun setAmountColor(transactionType: TransactionType): Color {
-        return if (transactionType == TransactionType.DEBIT) {
-            brightOrange
-        } else {
-            liteGreen
-        }
-    }
-
-    private fun setTransactionMessage(transactionType: TransactionType): String {
-        return if (transactionType == TransactionType.DEBIT) {
-            "Sent Securely"
-        } else {
-            "Received Successfully"
-        }
-    }
-
-    @Composable
-    fun XifiPayHorizontalProfileList(list: List<Pair<Int, String>>) {
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            list.forEach { profile ->
-                ProfileCard(profileImage = profile.first, username = profile.second)
-            }
-        }
-    }
-
-    @Composable
-    fun ProfileTitleWithXifiPay(title: String, showXifiPay: Boolean = true) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 12.sdp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Row {
-                CvTextView(
-                    txt = title,
-                    style = sfProDisplayBold,
-                    fontSize = 19.ssp
-                )
-                XifiPayView(
-                    modifier = Modifier
-                        .height(24.sdp)
-                        .padding(horizontal = 6.sdp),
-                    isVisible = showXifiPay
-                )
-            }
-
-            Row(
-                modifier = Modifier.padding(end = 14.sdp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                CvTextView(
-                    txt = "View all",
-                    textColor = txtViewAll,
-                    fontSize = 16.ssp,
-                    style = productSansRegular
-                )
-                Icon(
-                    painter = painterResource(R.drawable.ic_view_all),
-                    "", modifier = Modifier
-                        .scale(1.2f)
-                        .padding(top = 2.sdp, start = 8.sdp)
-                )
-            }
-        }
-    }
-
-    @Composable
-    fun ProfileCard(profileImage: Int, username: String) {
-        Column(
-            modifier = Modifier
-                .width(80.dp)
-                .padding(horizontal = 4.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Image(
-                painter = painterResource(id = profileImage),
-                contentDescription = null,
-                modifier = Modifier
-                    .height(74.sdp)
-                    .width(80.sdp)
-                    .clip(RoundedCornerShape(16.sdp))
-                    .background(Color.Gray),
-                contentScale = ContentScale.FillBounds
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = username,
-                style = robotoRegular,
-                textAlign = TextAlign.Center,
-                maxLines = 1,
-                overflow = TextOverflow.Clip,
-                fontSize = 11.ssp,
-                color = txtNameColor,
-                modifier = Modifier
-            )
-        }
-    }
-
-    @Preview(showSystemUi = true, device = Devices.PIXEL_7, showBackground = false)
-    @Composable
-    fun MainUiPreview() {
-        /*  Box(
-              modifier = Modifier
-                  .fillMaxWidth()
-                  .padding(horizontal = 18.sdp)
-                  .background(
-                      color = Color.White
-                  )
-                  .paint(
-                      painter = painterResource(id = R.drawable.ic_box_border)
-                  )
-          ) {
-              Row(
-                  verticalAlignment = Alignment.CenterVertically,
-                  modifier = Modifier.fillMaxHeight()
-              ) {
-                  val text by remember { mutableStateOf("") }
-                  OutlinedTextField(
-                      value = text,
-                      onValueChange = {},
-                      placeholder = {
-                          Text(
-                              text = "Pay to Contact",
-                              color = Color.Gray
-                          )
-                      },
-                      leadingIcon = {
-                          Image(
-                              painter = painterResource(R.drawable.ic_search), // Replace with your drawable resource
-                              contentDescription = "Search Icon"
-                          )
-                      },
-                      modifier = Modifier
-                          .fillMaxSize()
-                          .weight(2.5f),
-                      colors = OutlinedTextFieldDefaults.colors(
-                          focusedContainerColor = Color.Transparent,
-                          unfocusedContainerColor = Color.Transparent,
-                          disabledContainerColor = Color.Transparent,
-                          errorContainerColor = Color.Transparent,
-                          cursorColor = Color.Black,
-                          selectionColors = LocalTextSelectionColors.current,
-                          focusedBorderColor = Color.Transparent, // Set transparent since we're using a custom border
-                          unfocusedBorderColor = Color.Transparent
-                      ),
-                      shape = RoundedCornerShape(8.dp) // Rounded corners
-                  )
-                  Image(
-                      painter = painterResource(R.drawable.ic_scan_to_pay),
-                      "Scan to Pay",
-                      modifier = Modifier
-                          .weight(1f)
-                          .padding(end = 8.sdp),
-                  )
-              }
-          }*/
-//        Box(modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(top = 100.dp)
-//            .background(Color.LightGray)
-//            .paint(painterResource(R.drawable.ic_box_border))
-//            .scale(0.92f)) {
-        CurvedCard()
-//        }
     }
 }

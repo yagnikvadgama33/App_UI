@@ -16,6 +16,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
@@ -74,7 +75,11 @@ fun CvTextView(
     style: TextStyle = sfProDisplayRegular,
     fontSize: TextUnit = 12.sp,
     fontWeight: FontWeight = FontWeight.Normal,
-    textColor: Color = txtNameColor
+    textColor: Color = txtNameColor,
+    minLines: Int = 1,
+    maxLines:  Int = Int.MAX_VALUE,
+    textAlign: TextAlign? = null,
+    overflow: TextOverflow = TextOverflow.Visible
 ) {
 
     Text(
@@ -84,7 +89,10 @@ fun CvTextView(
         fontSize = fontSize,
         fontWeight = fontWeight,
         color = textColor,
-        overflow = TextOverflow.Visible
+        overflow = overflow,
+        minLines = minLines,
+        maxLines = maxLines,
+        textAlign = textAlign
     )
 }
 

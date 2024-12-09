@@ -1,4 +1,4 @@
-package com.example.appui.ui.model
+package com.example.appui.model
 
 import com.TransactionType
 

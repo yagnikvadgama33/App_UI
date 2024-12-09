@@ -5,15 +5,35 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
@@ -23,11 +43,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.CircularImageView
+import com.example.CvTextView
 import com.example.appui.ui.theme.AppUITheme
+import com.example.appui.ui.theme.txtGreen
+import com.example.appui.ui.theme.txtNameColor
+import com.example.appui.ui.theme.txtOrange
+import com.example.appui.ui.theme.vpaIdColor
+import com.robotoRegular
 import com.sdp
+import com.sfProDisplayBold
+import com.ssp
 
 class MainActivityDemo : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,7 +89,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
                 painter = painterResource(id = R.drawable.ic_box_border)
             )
             .fillMaxSize()
-            // .padding(8.dp)
+        // .padding(8.dp)
     ) {
         val height = size.height
         val width = size.width
@@ -150,21 +181,14 @@ fun CurvedCard() {
             .paint(painterResource(R.drawable.ic_box_border))
             .scale(0.93f)
     ) {
+
         Canvas(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 12.dp)
                 .height(60.dp)
-//                .background(
-//                    brush = Brush.linearGradient(
-//                        colors = listOf(Color.Blue, Color.Cyan), // Gradient colors
-//                        start = Offset(0f, 0f),
-//                        end = Offset(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY)
-//                    ),
-//                    shape = RoundedCornerShape(12.dp) // Same corner radius as canvas
-//                )
-//                .padding(3.dp) // Padding to create space for the border
         ) {
+
             val path = Path().apply {
                 val curveHeight = 30f
                 val cornerRadius = 12.dp.toPx() // Convert dp to pixels
@@ -257,8 +281,7 @@ fun CurvedCard() {
 }
 
 
-
-@Preview
+@Preview(showSystemUi = true, device = Devices.PIXEL_7)
 @Composable
 fun CurvedCardPreview() {
     Box(
