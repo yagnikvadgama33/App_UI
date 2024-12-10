@@ -20,7 +20,7 @@ import com.example.appui.ui.theme.brightOrange
 import com.example.appui.ui.theme.liteGreen
 
 
- fun setTranscationType(amount: Int, transactionType: TransactionType): String {
+fun setTranscationType(amount: Int, transactionType: TransactionType): String {
     return if (transactionType == TransactionType.CREDIT) {
         "+ €$amount"
     } else {
@@ -28,7 +28,7 @@ import com.example.appui.ui.theme.liteGreen
     }
 }
 
- fun setAmountColor(transactionType: TransactionType): Color {
+fun setAmountColor(transactionType: TransactionType): Color {
     return if (transactionType == TransactionType.DEBIT) {
         brightOrange
     } else {
@@ -36,7 +36,7 @@ import com.example.appui.ui.theme.liteGreen
     }
 }
 
- fun setTransactionMessage(transactionType: TransactionType): String {
+fun setTransactionMessage(transactionType: TransactionType): String {
     return if (transactionType == TransactionType.DEBIT) {
         "Sent Securely"
     } else {
@@ -92,8 +92,13 @@ var sfProDisplayBold = TextStyle(
     fontSize = 16.sp,
 )
 
+var sfProDisplaySemiBold =
+    TextStyle(
+        fontFamily = FontFamily(Font(R.font.sf_pro_display_semi_bold)),
+        fontSize = 14.sp)
+
 var robotoRegular = TextStyle(
-    fontFamily =FontFamily(Font(R.font.roboto_regular)),
+    fontFamily = FontFamily(Font(R.font.roboto_regular)),
     fontSize = 14.sp,
 )
 

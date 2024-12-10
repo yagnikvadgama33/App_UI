@@ -48,4 +48,11 @@
     <string name="manica_j">Manica J</string>
     <string name="manica_j_28_05_23_10_11_12">28/05/23 10:11:12</string>
     <string name="cd_view_all">View All</string>
+    <string name="txt_to">to</string>
+    <string name="cd_back">Back</string>
+    <string name="cd_setting">Setting</string>
+    <string name="cd_xifi_pay">Xifi Pay</string>
+    <string name="txt_invite_your_friends_to_earn_ixfi_points">"Invite your friends to Earn IXFI points "</string>
+    <string name="txt_invite_your_friends">Invite Your friends</string>
+    <string name="cd_down_arrow">Down Arrow</string>
 </resources>

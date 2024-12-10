@@ -1,6 +1,5 @@
 package com.example
 
-import android.util.Size
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding
@@ -9,11 +8,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.focusModifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -25,7 +24,6 @@ import com.example.appui.R
 import com.example.appui.ui.theme.txtNameColor
 import com.sdp
 import com.sfProDisplayRegular
-import com.ssp
 
 @Composable
 fun CvIconButton(iconPath: Int, iconDescription: String, modifier: Modifier, onClick: () -> Unit) {
@@ -77,9 +75,10 @@ fun CvTextView(
     fontWeight: FontWeight = FontWeight.Normal,
     textColor: Color = txtNameColor,
     minLines: Int = 1,
-    maxLines:  Int = Int.MAX_VALUE,
+    maxLines: Int = Int.MAX_VALUE,
     textAlign: TextAlign? = null,
-    overflow: TextOverflow = TextOverflow.Visible
+    overflow: TextOverflow = TextOverflow.Visible,
+    letterSpacing: TextUnit = TextUnit.Unspecified
 ) {
 
     Text(
@@ -92,7 +91,8 @@ fun CvTextView(
         overflow = overflow,
         minLines = minLines,
         maxLines = maxLines,
-        textAlign = textAlign
+        textAlign = textAlign,
+        letterSpacing = letterSpacing
     )
 }
 
@@ -101,6 +101,10 @@ fun XifiPayView(
     modifier: Modifier,
     isVisible: Boolean
 ) {
-    if(isVisible)
-        Image(painter = painterResource(R.drawable.ic_xifi_pay), "Xifi Pay", modifier = modifier)
+    if (isVisible)
+        Image(
+            painter = painterResource(R.drawable.ic_xifi_pay),
+            stringResource(R.string.cd_xifi_pay),
+            modifier = modifier
+        )
 }
