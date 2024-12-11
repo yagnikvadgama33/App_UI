@@ -766,8 +766,7 @@ class MainActivity : ComponentActivity() {
             // Amount & Date
             Column(
                 horizontalAlignment = Alignment.End,
-                verticalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.padding(top = 4.sdp)
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
                 // Amount
                 CvTextView(
@@ -777,7 +776,7 @@ class MainActivity : ComponentActivity() {
                     fontSize = 16.ssp
                 )
 
-                Spacer(modifier = Modifier.height(4.sdp))
+                Spacer(modifier = Modifier.height(8.sdp))
 
                 // Date
                 CvTextView(
