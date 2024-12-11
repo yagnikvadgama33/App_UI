@@ -60,6 +60,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.TransactionType
 import com.example.CircularImageView
@@ -155,7 +157,7 @@ class MainActivity : ComponentActivity() {
                             },
                             modifier = Modifier
                                 .scale(1.9f)
-                                .padding(bottom = 18.sdp, end = 18.sdp)
+                                .padding(bottom = 20.sdp, end = 20.sdp)
                         )
                     }
                 ) { innerPadding ->
@@ -172,19 +174,15 @@ class MainActivity : ComponentActivity() {
                 .fillMaxSize()
                 .verticalScroll(state = scrollState)
         ) {
-            Column(modifier = Modifier.fillMaxHeight(0.51f)) {
+            Column(modifier = Modifier.fillMaxHeight(0.52f)) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-//                        .paint(
-//                            painter = painterResource(id = R.drawable.ic_bg),
-//                            contentScale = ContentScale.FillBounds
-//                        )
-                        .background(
-                            headerBg,
-                            shape = RoundedCornerShape(bottomEnd = 15.sdp, bottomStart = 15.sdp)
+                        .paint(
+                            painter = painterResource(id = R.drawable.ic_bg),
+                            contentScale = ContentScale.FillBounds
                         )
-                        .padding(top = 120.sdp)
+                        .padding(top = 122.sdp)
                 ) {
                     Column {
                         Spacer(Modifier.padding(top = 2.sdp))
@@ -240,14 +238,16 @@ class MainActivity : ComponentActivity() {
                                         txt = stringResource(R.string.txt_vpa_id),
                                         style = robotoRegular,
                                         fontSize = 15.ssp,
-                                        textColor = txtNameColor
+                                        textColor = txtNameColor,
+                                        letterSpacing = TextUnit(0.5f, TextUnitType.Sp)
                                     )
                                     CvTextView(
                                         txt = stringResource(R.string.txt_cryptouser_ixfi),
                                         style = robotoRegular,
                                         fontWeight = FontWeight.SemiBold,
                                         fontSize = 14.ssp,
-                                        textColor = vpaIdColor
+                                        textColor = vpaIdColor,
+                                        letterSpacing = TextUnit(0.5f, TextUnitType.Sp)
                                     )
                                     Image(
                                         painter = painterResource(R.drawable.ic_copy),
@@ -338,7 +338,7 @@ class MainActivity : ComponentActivity() {
                                     .fillMaxSize()
                                     .scale(1.03f)
                                     .padding(
-                                        top = 14.sdp,
+                                        top = 16.sdp,
                                         start = 18.sdp,
                                         end = 18.sdp,
                                         bottom = 14.sdp
@@ -349,7 +349,7 @@ class MainActivity : ComponentActivity() {
                             Column(
                                 modifier = Modifier
                                     .fillMaxSize()
-                                    .padding(start = 44.sdp, top = 31.sdp),
+                                    .padding(start = 44.sdp, top = 33.sdp),
                                 verticalArrangement = Arrangement.Center,
                                 horizontalAlignment = Alignment.Start
                             ) {
@@ -417,16 +417,16 @@ class MainActivity : ComponentActivity() {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 32.sdp, start = 5.sdp),
+                    .padding(top = 28.sdp, start = 5.sdp),
                 horizontalArrangement = Arrangement.Center
             ) {
 
-                XifiPayView(modifier = Modifier.scale(1.1f), isVisible = true)
+                XifiPayView(modifier = Modifier.scale(1.0f), isVisible = true)
 
                 Box(
                     modifier = Modifier
                         .align(Alignment.Bottom)
-                        .padding(start = 6.sdp, bottom = 4.sdp)
+                        .padding(start = 4.sdp, bottom = 4.sdp)
                 ) {
                     CvTextView(
                         txt = stringResource(R.string.txt_to),
@@ -516,7 +516,7 @@ class MainActivity : ComponentActivity() {
                         stringResource(R.string.bg_img),
                         modifier = Modifier
                             .offset(x = (-10).sdp, y = (-2).sdp)
-                            .scale(1f)
+                            .scale(1.1f)
                     )
                     // Content above the image
                     Column(
@@ -572,41 +572,45 @@ class MainActivity : ComponentActivity() {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 18.sdp, horizontal = 22.sdp)
+                    .padding(top = 30.sdp, start = 22.sdp, end = 22.sdp)
+                    .scale(1.02f)
                     .paint(painter = painterResource(R.drawable.ic_invite_frnd_bg_new)),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(
                     modifier = Modifier
-                        .weight(1.7f)
+                        .weight(0.7f)
                         .padding(horizontal = 22.sdp)
                 ) {
                     CvTextView(
                         txt = stringResource(R.string.txt_invite_your_friends),
                         style = sfProDisplayBold,
-                        fontSize = 19.ssp
+                        fontSize = 19.ssp,
+                        modifier = Modifier.padding(bottom = 8.sdp, top = 8.sdp),
+                        letterSpacing = TextUnit(0.4f, TextUnitType.Sp)
                     )
-                    Spacer(modifier = Modifier.height(6.sdp))
+
                     CvTextView(
                         txt = stringResource(R.string.txt_invite_your_friends_to_earn_ixfi_points),
                         style = robotoRegular,
                         fontSize = 15.ssp,
-                        textColor = liteTxtColor
+                        textColor = liteTxtColor,
+                        modifier = Modifier.padding(top = 4.sdp),
+                        letterSpacing = TextUnit(0.4f, TextUnitType.Sp)
                     )
                 }
                 Image(
-                    painter = painterResource(R.drawable.ic_invite_frnd),
+                    painter = painterResource(R.drawable.ic_invite_frnd_new),
                     stringResource(R.string.cd_invite_your_friend),
                     modifier = Modifier
-                        .weight(1f)
-                        .scale(1.15f)
-                        .padding(bottom = 6.sdp)
-                    ,
+                        .weight(0.4f)
+//                        .scale(0.9f)
+                        .padding(bottom = 6.sdp, end = 18.sdp),
                     contentScale = ContentScale.Fit
                 )
             }
 
-            Spacer(modifier = Modifier.size(2.sdp))
+            Spacer(modifier = Modifier.size(40.sdp))
 
             ProfileTitleWithXifiPay(stringResource(R.string.txt_buy_more_with))
 
@@ -637,6 +641,7 @@ class MainActivity : ComponentActivity() {
                 alignment = Alignment.Center,
                 modifier = Modifier
                     .fillMaxWidth()
+                    .scale(1.1f)
                     .padding(bottom = 22.sdp)
                     .navigationBarsPadding()
             )
@@ -679,7 +684,7 @@ class MainActivity : ComponentActivity() {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.sdp)
+                .padding(top = 10.sdp, bottom = 10.sdp)
         ) {
             transactions.forEachIndexed { i, transaction ->
                 TransactionItem(transaction, showDivider = transactions.size - 1 != i)
@@ -692,7 +697,7 @@ class MainActivity : ComponentActivity() {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 16.sdp, horizontal = 16.sdp)
+                .padding(vertical = 14.sdp, horizontal = 16.sdp)
         ) {
             // Profile Icon
             Box(
@@ -709,8 +714,7 @@ class MainActivity : ComponentActivity() {
                         style = productSansMedium,
                         fontSize = 24.ssp
                     )
-                }
-                else {
+                } else {
                     Image(
                         painter = painterResource(id = transaction.profilePic),
                         contentDescription = null,
@@ -802,7 +806,7 @@ class MainActivity : ComponentActivity() {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 12.sdp),
+                .padding(top = 12.sdp, start = 3.sdp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             list.forEach { profile ->
@@ -824,7 +828,9 @@ class MainActivity : ComponentActivity() {
                 CvTextView(
                     txt = title,
                     style = sfProDisplayBold,
-                    fontSize = 20.ssp
+                    fontSize = 20.ssp,
+                    modifier = Modifier.padding(start = 2.sdp),
+                    letterSpacing = TextUnit(0.5f, TextUnitType.Sp)
                 )
                 XifiPayView(
                     modifier = Modifier
